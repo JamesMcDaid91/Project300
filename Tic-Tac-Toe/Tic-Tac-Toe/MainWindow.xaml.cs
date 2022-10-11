@@ -135,6 +135,17 @@ namespace Tic_Tac_Toe
         private bool CheckLine2_2()
         {
             bool response = false;
+            bool lineBackAcross2InARow = Compare(2, 2, 1, 2);
+            if (lineBackAcross2InARow)
+            {
+                response = Compare(2, 2, 0, 2);
+            }
+            return response;
+        }
+
+        private bool CheckLine3_1()
+        {
+            bool response = false;
             bool lineMiddleTop2InARow = Compare(1, 1, 1, 0);
             if (lineMiddleTop2InARow)
             {
@@ -143,7 +154,7 @@ namespace Tic_Tac_Toe
             return response;
         }
 
-        private bool CheckLine3_1()
+        private bool CheckLine3_2()
         {
             bool response = false;
             bool lineMiddleLeft2InARow = Compare(1, 1, 0, 1);
@@ -151,12 +162,6 @@ namespace Tic_Tac_Toe
             {
                 response = Compare(1, 1, 2, 1);
             }
-            return response;
-        }
-
-        private bool CheckLine3_2()
-        {
-            bool response = false;
             return response;
         }
         private bool Compare(int postion1Column, int postion1Row, int postion2Column, int postion2Row)
