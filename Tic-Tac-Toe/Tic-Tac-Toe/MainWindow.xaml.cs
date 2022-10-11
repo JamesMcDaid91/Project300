@@ -157,6 +157,7 @@ namespace Tic_Tac_Toe
             }
             return response;
         }
+
         //comparer tool to check if two grid postions have the same number
         private bool Compare(int postion1Column, int postion1Row, int postion2Column, int postion2Row)
         {
@@ -167,6 +168,8 @@ namespace Tic_Tac_Toe
             else return false;
         }
 
+        //Players
+        //Ai turn
         private void AIGo()
         {
             Random randomSeed = new Random();
@@ -180,22 +183,172 @@ namespace Tic_Tac_Toe
                 {
                     gameState[randomColumn, randomRow] = 2;
                     AITookItsGo = true;
+                    UpdateDisplay(randomColumn,randomRow,2);
                 }
             }
+            
             if (CheckForWin())
                 {
                 //AI win Screen
             }
             
         }
+        //player turn
         private void PlayerTurn(int gridColumn, int gridRow)
         {
             if (gameState[gridColumn, gridRow] == 0)// can only take a go if the position is empty
             {
                 gameState[gridColumn, gridRow] = 1;
+                UpdateDisplay(gridColumn,gridRow,1);
                 if (!CheckForWin()) // if no win
                     { AIGo(); }//AI plays
                 //else player win screen
+            }
+        }
+        //display update
+        private void UpdateDisplay(int column, int row, int player)
+        {
+            switch (column)
+            {
+                case 0: switch (row)
+                    {
+                        case 0:
+                            switch (player)
+                            {
+                                case 1: Button00.Content = "X";
+                                    break;
+                                case 2:
+                                    Button00.Content = "O";
+                                    break;
+                                default:
+                                    break;
+                            }
+                            break;
+                        case 1:
+                            switch (player)
+                            {
+                                case 1:
+                                    Button01.Content = "X";
+                                    break;
+                                case 2:
+                                    Button01.Content = "O";
+                                    break;
+                                default:
+                                    break;
+                            }
+                            break;
+                        case 2:
+                            switch (player)
+                            {
+                                case 1:
+                                    Button02.Content = "X";
+                                    break;
+                                case 2:
+                                    Button02.Content = "O";
+                                    break;
+                                default:
+                                    break;
+                            }
+                            break;
+                        default:
+                            break;
+                    }
+                    break;
+                case 1:
+                    switch (row)
+                    {
+                        case 0:
+                            switch (player)
+                            {
+                                case 1:
+                                    Button10.Content = "X";
+                                    break;
+                                case 2:
+                                    Button10.Content = "O";
+                                    break;
+                                default:
+                                    break;
+                            }
+                            break;
+                        case 1:
+                            switch (player)
+                            {
+                                case 1:
+                                    Button11.Content = "X";
+                                    break;
+                                case 2:
+                                    Button11.Content = "O";
+                                    break;
+                                default:
+                                    break;
+                            }
+                            break;
+                        case 2:
+                            switch (player)
+                            {
+                                case 1:
+                                    Button12.Content = "X";
+                                    break;
+                                case 2:
+                                    Button12.Content = "O";
+                                    break;
+                                default:
+                                    break;
+                            }
+                            break;
+                        default:
+                            break;
+                    }
+                    break;
+                case 2:
+                    switch (row)
+                    {
+                        case 0:
+                            switch (player)
+                            {
+                                case 1:
+                                    Button20.Content = "X";
+                                    break;
+                                case 2:
+                                    Button20.Content = "O";
+                                    break;
+                                default:
+                                    break;
+                            }
+                            break;
+                        case 1:
+                            switch (player)
+                            {
+                                case 1:
+                                    Button21.Content = "X";
+                                    break;
+                                case 2:
+                                    Button21.Content = "O";
+                                    break;
+                                default:
+                                    break;
+                            }
+                            break;
+                        case 2:
+                            switch (player)
+                            {
+                                case 1:
+                                    Button22.Content = "X";
+                                    break;
+                                case 2:
+                                    Button22.Content = "O";
+                                    break;
+                                default:
+                                    break;
+                            }
+                            break;
+                        default:
+                            break;
+                    }
+                    break;
+
+                default:
+                    break;
             }
         }
     }
