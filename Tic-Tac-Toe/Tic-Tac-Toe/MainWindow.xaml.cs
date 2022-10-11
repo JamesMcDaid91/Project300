@@ -88,30 +88,39 @@ namespace Tic_Tac_Toe
         private bool CheckLine1_1()
         {
             bool response = false;
-            bool lineDown2InARow = Compare(0, 0, 0, 1);
-            if (lineDown2InARow)
+            if (gameState[0,1] != 0)
             {
-                response = Compare(0, 0, 0, 2);
+                bool lineDown2InARow = Compare(0, 0, 0, 1);
+                if (lineDown2InARow)
+                {
+                    response = Compare(0, 0, 0, 2);
+                }
             }
             return response;
         }
         private bool CheckLine1_2()
         {
             bool response = false;
-            bool lineAcross2InARow = Compare(0, 0, 1, 0);
-            if (lineAcross2InARow)
+            if (gameState[1, 0] != 0)
             {
-                response = Compare(0, 0, 2, 0);
+                bool lineAcross2InARow = Compare(0, 0, 1, 0);
+                if (lineAcross2InARow)
+                {
+                    response = Compare(0, 0, 2, 0);
+                }
             }
             return response;
         }
         private bool CheckLine1_3()
         {
             bool response = false;
-            bool lineAcross2InARow = Compare(0, 0, 1, 0);
-            if (lineAcross2InARow)
+            if (gameState[1, 0] != 0)
             {
-                response = Compare(0, 0, 2, 0);
+                bool lineAcross2InARow = Compare(0, 0, 1, 0);
+                if (lineAcross2InARow)
+                {
+                    response = Compare(0, 0, 2, 0);
+                }
             }
             return response;
         }
@@ -119,20 +128,26 @@ namespace Tic_Tac_Toe
         private bool CheckLine2_1()
         {
             bool response = false;
-            bool lineUp2InARow = Compare(2, 2, 2, 1);
-            if (lineUp2InARow)
+            if (gameState[2, 1] != 0)
             {
-                response = Compare(2, 2, 2, 0);
+                bool lineUp2InARow = Compare(2, 2, 2, 1);
+                if (lineUp2InARow)
+                {
+                    response = Compare(2, 2, 2, 0);
+                }
             }
             return response;
         }
         private bool CheckLine2_2()
         {
             bool response = false;
-            bool lineBackAcross2InARow = Compare(2, 2, 1, 2);
-            if (lineBackAcross2InARow)
+            if (gameState[1, 2] != 0)
             {
-                response = Compare(2, 2, 0, 2);
+                bool lineBackAcross2InARow = Compare(2, 2, 1, 2);
+                if (lineBackAcross2InARow)
+                {
+                    response = Compare(2, 2, 0, 2);
+                }
             }
             return response;
         }
@@ -140,20 +155,26 @@ namespace Tic_Tac_Toe
         private bool CheckLine3_1()
         {
             bool response = false;
-            bool lineMiddleTop2InARow = Compare(1, 1, 1, 0);
-            if (lineMiddleTop2InARow)
+            if (gameState[1, 0] != 0)
             {
-                response = Compare(1, 1, 1, 2);
+                bool lineMiddleTop2InARow = Compare(1, 1, 1, 0);
+                if (lineMiddleTop2InARow)
+                {
+                    response = Compare(1, 1, 1, 2);
+                }
             }
             return response;
         }
         private bool CheckLine3_2()
         {
             bool response = false;
-            bool lineMiddleLeft2InARow = Compare(1, 1, 0, 1);
-            if (lineMiddleLeft2InARow)
+            if (gameState[0, 1] != 0)
             {
-                response = Compare(1, 1, 2, 1);
+                bool lineMiddleLeft2InARow = Compare(1, 1, 0, 1);
+                if (lineMiddleLeft2InARow)
+                {
+                    response = Compare(1, 1, 2, 1);
+                }
             }
             return response;
         }
