@@ -1,4 +1,5 @@
-﻿using System.Windows;
+﻿using System;
+using System.Windows;
 
 namespace Tic_Tac_Toe
 {
@@ -67,24 +68,106 @@ namespace Tic_Tac_Toe
             PlayerTurn(2, 2);
         }
 
-        private void CheckForWin()
+        private bool CheckForWin()
         {
             bool win = false;
             if (win == false)
-            { win = checkLine1_1(); }
+            { win = CheckLine1_1(); }
             if (win == false)
-            { win = checkLine1_2(); }
+            { win = CheckLine1_2(); }
             if (win == false)
-            { win = checkLine1_3(); }
+            { win = CheckLine1_3(); }
             if (win == false)
-            { win = checkLine2_1(); }
+            { win = CheckLine2_1(); }
             if (win == false)
-            { win = checkLine2_2(); }
+            { win = CheckLine2_2(); }
             if (win == false)
-            { win = checkLine3_1(); }
+            { win = CheckLine3_1(); }
             if (win == false)
-            { win = checkLine3_2(); }
+            { win = CheckLine3_2(); }
+            return win;
         }
+
+        private bool CheckLine1_1()
+        {
+            bool response = false;
+            bool lineDown2InARow = Compare(0, 0, 0, 1);
+            if (lineDown2InARow)
+            {
+                response = Compare(0, 0, 0, 2);
+            }
+            return response;
+        }
+
+        private bool CheckLine1_2()
+        {
+            bool response = false;
+            bool lineAcross2InARow = Compare(0, 0, 1, 0);
+            if (lineAcross2InARow)
+            {
+                response = Compare(0, 0, 2, 0);
+            }
+            return response;
+        }
+
+        private bool CheckLine1_3()
+        {
+            bool response = false;
+            bool lineAcross2InARow = Compare(0, 0, 1, 0);
+            if (lineAcross2InARow)
+            {
+                response = Compare(0, 0, 2, 0);
+            }
+            return response;
+        }
+
+        private bool CheckLine2_1()
+        {
+            bool response = false;
+            bool lineUp2InARow = Compare(2, 2, 2, 1);
+            if (lineUp2InARow)
+            {
+                response = Compare(2, 2, 2, 0);
+            }
+            return response;
+        }
+
+        private bool CheckLine2_2()
+        {
+            bool response = false;
+            bool lineMiddleTop2InARow = Compare(1, 1, 1, 0);
+            if (lineMiddleTop2InARow)
+            {
+                response = Compare(1, 1, 1, 2);
+            }
+            return response;
+        }
+
+        private bool CheckLine3_1()
+        {
+            bool response = false;
+            bool lineMiddleLeft2InARow = Compare(1, 1, 0, 1);
+            if (lineMiddleLeft2InARow)
+            {
+                response = Compare(1, 1, 2, 1);
+            }
+            return response;
+        }
+
+        private bool CheckLine3_2()
+        {
+            bool response = false;
+            return response;
+        }
+        private bool Compare(int postion1Column, int postion1Row, int postion2Column, int postion2Row)
+        {
+            if (gameState[postion1Column, postion1Row] == gameState[postion2Column, postion2Row])
+            {
+                return true;
+            }
+            else return false;
+        }
+
         private void AIGo()
         {
 
