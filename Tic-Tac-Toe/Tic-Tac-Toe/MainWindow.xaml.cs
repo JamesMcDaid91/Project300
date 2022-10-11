@@ -1,5 +1,5 @@
-﻿using System;
-using System.Windows;
+﻿using System.Windows;
+using System;
 
 namespace Tic_Tac_Toe
 {
@@ -22,26 +22,25 @@ namespace Tic_Tac_Toe
             }
         }
 
+        //buttons
+        //column 1
         private void Button00_Click(object sender, RoutedEventArgs e)
         {
             PlayerTurn(0, 0);
         }
-
         private void Button01_Click(object sender, RoutedEventArgs e)
         {
             PlayerTurn(0, 1);
         }
-
         private void Button02_Click(object sender, RoutedEventArgs e)
         {
             PlayerTurn(0, 2);
         }
-
+        //column 2
         private void Button10_Click(object sender, RoutedEventArgs e)
         {
             PlayerTurn(1, 0);
         }
-
         private void Button11_Click(object sender, RoutedEventArgs e)
         {
             PlayerTurn(1, 1);
@@ -50,24 +49,21 @@ namespace Tic_Tac_Toe
         {
             PlayerTurn(1, 2);
         }
-
-
+        //column 3
         private void Button20_Click(object sender, RoutedEventArgs e)
         {
             PlayerTurn(2, 0);
         }
-
-
         private void Button21_Click(object sender, RoutedEventArgs e)
         {
             PlayerTurn(2, 1);
         }
-
         private void Button22_Click(object sender, RoutedEventArgs e)
         {
             PlayerTurn(2, 2);
         }
 
+        //win checker
         private bool CheckForWin()
         {
             bool win = false;
@@ -87,7 +83,8 @@ namespace Tic_Tac_Toe
             { win = CheckLine3_2(); }
             return win;
         }
-
+        //line checks
+        //from grid postion[0,0]
         private bool CheckLine1_1()
         {
             bool response = false;
@@ -98,7 +95,6 @@ namespace Tic_Tac_Toe
             }
             return response;
         }
-
         private bool CheckLine1_2()
         {
             bool response = false;
@@ -109,7 +105,6 @@ namespace Tic_Tac_Toe
             }
             return response;
         }
-
         private bool CheckLine1_3()
         {
             bool response = false;
@@ -120,7 +115,7 @@ namespace Tic_Tac_Toe
             }
             return response;
         }
-
+        //from grid postion[2,2]
         private bool CheckLine2_1()
         {
             bool response = false;
@@ -131,7 +126,6 @@ namespace Tic_Tac_Toe
             }
             return response;
         }
-
         private bool CheckLine2_2()
         {
             bool response = false;
@@ -142,7 +136,7 @@ namespace Tic_Tac_Toe
             }
             return response;
         }
-
+        //from grid postion[1,1]
         private bool CheckLine3_1()
         {
             bool response = false;
@@ -153,7 +147,6 @@ namespace Tic_Tac_Toe
             }
             return response;
         }
-
         private bool CheckLine3_2()
         {
             bool response = false;
@@ -164,6 +157,7 @@ namespace Tic_Tac_Toe
             }
             return response;
         }
+        //comparer tool to check if two grid postions have the same number
         private bool Compare(int postion1Column, int postion1Row, int postion2Column, int postion2Row)
         {
             if (gameState[postion1Column, postion1Row] == gameState[postion2Column, postion2Row])
@@ -175,15 +169,33 @@ namespace Tic_Tac_Toe
 
         private void AIGo()
         {
-
+            Random randomSeed = new Random();
+            Random randomNumber = new Random(randomSeed.Next());
+            bool AITookItsGo = false;
+            while(!AITookItsGo)
+            {
+                int randomColumn = randomNumber.Next(0, 3);
+                int randomRow = randomNumber.Next(0, 3);
+                if ( gameState[randomColumn,randomRow] == 0)
+                {
+                    gameState[randomColumn, randomRow] = 2;
+                    AITookItsGo = true;
+                }
+            }
+            if (CheckForWin())
+                {
+                //AI win Screen
+            }
+            
         }
         private void PlayerTurn(int gridColumn, int gridRow)
         {
-            if (gameState[gridColumn, gridRow] == 0)
+            if (gameState[gridColumn, gridRow] == 0)// can only take a go if the position is empty
             {
                 gameState[gridColumn, gridRow] = 1;
-                CheckForWin();
-                AIGo();
+                if (!CheckForWin()) // if no win
+                    { AIGo(); }//AI plays
+                //else player win screen
             }
         }
     }
