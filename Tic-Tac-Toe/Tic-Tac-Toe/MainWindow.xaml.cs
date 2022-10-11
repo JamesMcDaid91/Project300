@@ -114,12 +114,12 @@ namespace Tic_Tac_Toe
         private bool CheckLine1_3()
         {
             bool response = false;
-            if (gameState[1, 0] != 0)
+            if (gameState[1, 1] != 0)
             {
-                bool lineAcross2InARow = Compare(0, 0, 1, 0);
-                if (lineAcross2InARow)
+                bool lineDiagonal2InARow = Compare(0, 0, 1, 1);
+                if (lineDiagonal2InARow)
                 {
-                    response = Compare(0, 0, 2, 0);
+                    response = Compare(0, 0, 2, 2);
                 }
             }
             return response;
@@ -211,6 +211,7 @@ namespace Tic_Tac_Toe
             if (CheckForWin())
                 {
                 //AI win Screen
+                EndScreen("Computer");
             }
             
         }
@@ -222,7 +223,11 @@ namespace Tic_Tac_Toe
                 gameState[gridColumn, gridRow] = 1;
                 UpdateDisplay(gridColumn,gridRow,1);
                 if (!CheckForWin()) // if no win
-                    { AIGo(); }//AI plays
+                { AIGo(); }//AI plays
+                else
+                {
+                    EndScreen("Player");
+                }
                 //else player win screen
             }
         }
@@ -371,6 +376,15 @@ namespace Tic_Tac_Toe
                 default:
                     break;
             }
+        }
+        private void EndScreen (string winner)
+        {
+            EndScreen gameOver = new EndScreen();
+            string text = winner + " WINS!!!";
+            gameOver.TextBlock.Text = text;            
+            gameOver.Show();
+            gameOver.Focus();
+            this.Close();
         }
     }
 }
