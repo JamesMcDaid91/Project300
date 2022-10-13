@@ -240,6 +240,10 @@ namespace Tic_Tac_Toe
                 //AI win Screen
                 EndScreen("Computer");
             }
+            if (CheckDraw())
+            {
+                EndScreen("Nobody");
+            }
             
         }
         //player turn
@@ -250,7 +254,13 @@ namespace Tic_Tac_Toe
                 gameState[gridColumn, gridRow] = 1;
                 UpdateDisplay(gridColumn,gridRow,1);
                 if (!CheckForWin()) // if no win
-                { AIGo(); }//AI plays
+                {
+                    if (!CheckDraw())
+                    {
+                        AIGo();
+                    }
+                    else EndScreen("Nobody");
+                }
                 else
                 {
                     EndScreen("Player");
@@ -412,6 +422,29 @@ namespace Tic_Tac_Toe
             gameOver.Show();
             gameOver.Focus();
             this.Close();
+        }
+        private bool CheckDraw()
+        {
+            bool IsDraw = true;
+            int jvalue = 0;
+            for (int i = 0; i < gameState.GetLength(0); i++)
+            {
+                for (int j = 0; j < gameState.GetLength(1); j++)
+                {
+                    jvalue = j;
+                    if (gameState[i,j] == 0)
+                    {
+                        IsDraw = false;
+                        break;
+                    }
+                }
+                if (gameState[i, jvalue] == 0)
+                {
+                    break;
+                }
+            }
+            return IsDraw;
+
         }
     }
 }
