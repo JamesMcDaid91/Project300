@@ -26,41 +26,68 @@ namespace Tic_Tac_Toe
         //column 1
         private void Button00_Click(object sender, RoutedEventArgs e)
         {
-            PlayerTurn(0, 0);
+            if (gameState[0,0] == 0)
+            {
+                PlayerTurn(0, 0);
+            }            
         }
         private void Button01_Click(object sender, RoutedEventArgs e)
         {
-            PlayerTurn(0, 1);
+            if (gameState[0, 1] == 0)
+            {
+                PlayerTurn(0, 1);
+            }
         }
         private void Button02_Click(object sender, RoutedEventArgs e)
         {
-            PlayerTurn(0, 2);
+            if (gameState[0, 2] == 0)
+            {
+                PlayerTurn(0, 2);
+            }
         }
         //column 2
         private void Button10_Click(object sender, RoutedEventArgs e)
         {
-            PlayerTurn(1, 0);
+            if (gameState[1, 0] == 0)
+            {
+                PlayerTurn(1, 0);
+            }
         }
         private void Button11_Click(object sender, RoutedEventArgs e)
         {
-            PlayerTurn(1, 1);
+            if (gameState[1, 1] == 0)
+            {
+                PlayerTurn(1, 1);
+            }
         }
         private void Button12_Click(object sender, RoutedEventArgs e)
         {
-            PlayerTurn(1, 2);
+            if (gameState[1, 2] == 0)
+            {
+                PlayerTurn(1, 2);
+            }
         }
         //column 3
         private void Button20_Click(object sender, RoutedEventArgs e)
         {
-            PlayerTurn(2, 0);
+            if (gameState[2, 0] == 0)
+            {
+                PlayerTurn(2, 0);
+            }
         }
         private void Button21_Click(object sender, RoutedEventArgs e)
         {
-            PlayerTurn(2, 1);
+            if (gameState[2, 1] == 0)
+            {
+                PlayerTurn(2, 1);
+            }
         }
         private void Button22_Click(object sender, RoutedEventArgs e)
         {
-            PlayerTurn(2, 2);
+            if (gameState[2, 2] == 0)
+            {
+                PlayerTurn(2, 2);
+            }
         }
 
         //win checker
