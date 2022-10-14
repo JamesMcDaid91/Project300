@@ -108,6 +108,8 @@ namespace Tic_Tac_Toe
             { win = CheckLine3_1(); }
             if (win == false)
             { win = CheckLine3_2(); }
+            if (win == false)
+            { win = CheckLine4(); }
             return win;
         }
         //line checks
@@ -205,6 +207,21 @@ namespace Tic_Tac_Toe
             }
             return response;
         }
+        //from grid postion[0,2] (opposite Diagonal)
+        private bool CheckLine4()
+        {
+            bool response = false;
+            if (gameState[0, 2] != 0)
+            {
+                bool lineMiddleLeft2InARow = Compare(0, 2, 1, 1);
+                if (lineMiddleLeft2InARow)
+                {
+                    response = Compare(0, 2, 2, 0);
+                }
+            }
+            return response;
+        }
+
 
         //comparer tool to check if two grid postions have the same number
         private bool Compare(int postion1Column, int postion1Row, int postion2Column, int postion2Row)
