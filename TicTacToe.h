@@ -2,17 +2,29 @@
 
 #include <TouchScreen.h>  
 
+
+// PLAYER 1 = X
+// PLAYER 2 = O
+// 
+//
+//
+//
+//
+
+
+
 class ttc{
   private:  
+  bool player1=true, player2=false, pos1, pos2, pos3, pos4, pos5, pos6, pos7, pos8, pos9;
 const int XP=6,XM=A2,YP=A1,YM=7; //320x480 ID=0x9486
 const int TS_LEFT=927,TS_RT=115,TS_TOP=954,TS_BOT=114;
 
 TouchScreen ts = TouchScreen(XP, YP, XM, YM, 300);
 TSPoint tp;
 
-MCUFRIEND_kbv tft;    
+//MCUFRIEND_kbv tft;    
 
-#define MINPRESSURE 100
+#define MINPRESSURE 600
 #define MAXPRESSURE 1000
 
 int16_t BOXSIZE;
@@ -31,7 +43,12 @@ uint8_t Orientation = 0;    //PORTRAIT
 
 
   public:
-void mainGameSetup(){
+
+void test(){
+  Serial.print("fromTicTacToe_Method");
+  }
+  
+void mainGameSetup(MCUFRIEND_kbv tft){
     tft.setTextColor(RED);
     tft.setTextSize(4);
     tft.print("WELCOME TO   TIC.TAC.TOE");
@@ -52,14 +69,14 @@ void mainGameSetup(){
     tft.fillRect(0, (OTHERBOXSIZE * 5)-3, tft.height(), 5, BLACK); //right line
     tft.fillRect(BOXSIZE-2, OTHERBOXSIZE, 5, OTHERBOXSIZE*6, BLACK); //middle top  
     tft.fillRect((BOXSIZE * 2)-2, OTHERBOXSIZE, 5, OTHERBOXSIZE*6, BLACK); //middle bottom
+    tft.fillRect(0,0,tft.width(),OTHERBOXSIZE,GREEN);
     delay(1000);
 }
 
-void mainGameLoop(){
-  //mainGameSetup();
-  // while(BOXSIZE==NULL){
-  //   mainGameSetup();   
-  // }
+void mainGameLoop(MCUFRIEND_kbv tft){
+   while(BOXSIZE==NULL){
+     mainGameSetup(tft);   
+   }
   uint16_t xpos, ypos;  //screen coordinates
     tp = ts.getPoint();   //tp.x, tp.y are ADC values
 
@@ -85,66 +102,152 @@ void mainGameLoop(){
                 ypos = map(tp.x, TS_LEFT, TS_RT, 0, tft.height());
                 break;
         }
-
-        // //BREAKOUT CODE
-        // if (ypos < OTHERBOXSIZE || ypos > (OTHERBOXSIZE * 5 + BOXSIZE)){
-        //   break;
-        // }
-
+        ////////////////////////////////////////////////////////////////////////
+        
+        // BREAKOUT CODE, STILL IN TESTING 
+         if (ypos < OTHERBOXSIZE || ypos > (OTHERBOXSIZE * 5 + BOXSIZE)){
+           tft.fillScreen(BLACK);
+           mainGameLoop(tft);
+         }
+        ////////////////////////////////////////////////////////////////////////
 
         //split into 3 ypos, top, middle and bottom. if you are within the boxsize height portion of each designated one. 
         //first 3 positions, if you are within the boxsize height portion of the top 3 boxes.
+
+         
+        
         if (ypos > OTHERBOXSIZE && ypos < (OTHERBOXSIZE + BOXSIZE)) {               
             oldPOS = currentPOS;
             //width of all boxes are BOXSIZE, this finds out which based on the xpos
-            if (xpos < BOXSIZE) { 
+            if (xpos < BOXSIZE && pos1 == false) { 
                 currentPOS = 1;
-                Cross_1();
-                //Circle_1();                
-            } else if (xpos < BOXSIZE * 2) { 
+                pos1 = true;
+                if (player1 == true){
+                  Cross_1();
+                  player1 = false;
+                  player2 = true;
+                  }
+                else if (player2 == true){
+                  Circle_1();
+                  player2 = false;
+                  player1 = true;
+                  }               
+            } else if (xpos < BOXSIZE * 2 && pos2 == false) { 
                 currentPOS = 2;
-                Cross_2();
-                //Circle_2();
-            } else if (xpos < BOXSIZE * 3) {
+                pos2 = true;
+                if (player1 == true){
+                  Cross_2();
+                  player1 = false;
+                  player2 = true;
+                  }
+                else if (player2 == true){
+                  Circle_2();
+                  player2 = false;
+                  player1 = true;
+                  } 
+            } else if (xpos < BOXSIZE * 3 && pos3 == false) {
                 currentPOS = 3;
-                Cross_3();
-                //Circle_3();
+                pos3 = true;
+                if (player1 == true){
+                  Cross_3();
+                  player1 = false;
+                  player2 = true;
+                  }
+                else if (player2 == true){
+                  Circle_3();
+                  player2 = false;
+                  player1 = true;
+                  } 
             }
        }
 
        if (ypos > OTHERBOXSIZE * 3 && ypos < (OTHERBOXSIZE * 3 + BOXSIZE)){
          oldPOS = currentPOS;
 
-            if (xpos < BOXSIZE) {
+            if (xpos < BOXSIZE && pos4 == false) {
                 currentPOS = 4;
-                Cross_4();
-                //Circle_4();                
-            } else if (xpos < BOXSIZE * 2) {
+                pos4 = true;
+                if (player1 == true){
+                  Cross_4();
+                  player1 = false;
+                  player2 = true;
+                  }
+                else if (player2 == true){
+                  Circle_4();
+                  player2 = false;
+                  player1 = true;
+                  }                
+            } else if (xpos < BOXSIZE * 2 && pos5 == false) {
                 currentPOS = 5;
-                Cross_5();
-                //Circle_5();
-            } else if (xpos < BOXSIZE * 3) {
+                pos5 = true;
+                if (player1 == true){
+                  Cross_5();
+                  player1 = false;
+                  player2 = true;
+                  }
+                else if (player2 == true){
+                  Circle_5();
+                  player2 = false;
+                  player1 = true;
+                  } 
+            } else if (xpos < BOXSIZE * 3 && pos6 == false) {
                 currentPOS = 6;
-                Cross_6();          
-                //Circle_6();
+                pos6 = true;
+                if (player1 == true){
+                  Cross_6();
+                  player1 = false;
+                  player2 = true;
+                  }
+                else if (player2 == true){
+                  Circle_6();
+                  player2 = false;
+                  player1 = true;
+                  } 
             }
        }
 
        if (ypos > OTHERBOXSIZE * 5 && ypos < (OTHERBOXSIZE * 5 + BOXSIZE)){
           oldPOS = currentPOS;
 
-            if (xpos < BOXSIZE) {
+            if (xpos < BOXSIZE && pos7 == false) {
                 currentPOS = 7;
-                Cross_7();
-                //Circle_7();                
-            } else if (xpos < BOXSIZE * 2) {
+                pos7 = true;
+                if (player1 == true){
+                  Cross_7();
+                  player1 = false;
+                  player2 = true;
+                  }
+                else if (player2 == true){
+                  Circle_7();
+                  player2 = false;
+                  player1 = true;
+                  }                
+            } else if (xpos < BOXSIZE * 2 && pos8 == false) {
                 currentPOS = 8;
-                Cross_8();
-                //Circle_8();
-            } else if (xpos < BOXSIZE * 3) {
+                pos8 = true;
+                if (player1 == true){
+                  Cross_8();
+                  player1 = false;
+                  player2 = true;
+                  }
+                else if (player2 == true){
+                  Circle_8();
+                  player2 = false;
+                  player1 = true;
+                  } 
+            } else if (xpos < BOXSIZE * 3 && pos9 == false) {
                 currentPOS = 9;
-                Cross_9();
-                //Circle_9();
+                pos9 = true;
+                if (player1 == true){
+                  Cross_9();
+                  player1 = false;
+                  player2 = true;
+                  }
+                else if (player2 == true){
+                  Circle_9();
+                  player2 = false;
+                  player1 = true;
+                  } 
             }
        }
     }    
@@ -260,24 +363,24 @@ void Cross_9(){
 }
 
 void Circle_1(){
-  tft.drawCircle(BOXSIZE/2, BOXSIZE, OTHERBOXSIZE/1.5, RED);
-  tft.drawCircle(BOXSIZE/2, BOXSIZE, (OTHERBOXSIZE/1.5) + 1, RED);
-  tft.drawCircle(BOXSIZE/2, BOXSIZE, (OTHERBOXSIZE/1.5) + 2, RED);
-  tft.drawCircle(BOXSIZE/2, BOXSIZE, (OTHERBOXSIZE/1.5) + 3, RED);
+  tft.drawCircle(BOXSIZE/2, OTHERBOXSIZE * 2, OTHERBOXSIZE/1.5, RED);
+  tft.drawCircle(BOXSIZE/2, OTHERBOXSIZE * 2, (OTHERBOXSIZE/1.5) + 1, RED);
+  tft.drawCircle(BOXSIZE/2, OTHERBOXSIZE * 2, (OTHERBOXSIZE/1.5) + 2, RED);
+  tft.drawCircle(BOXSIZE/2, OTHERBOXSIZE * 2, (OTHERBOXSIZE/1.5) + 3, RED);
 }
 
 void Circle_2(){
-  tft.drawCircle(tft.width()/2, BOXSIZE, OTHERBOXSIZE/1.5, RED);
-  tft.drawCircle(tft.width()/2, BOXSIZE, (OTHERBOXSIZE/1.5) + 1, RED);
-  tft.drawCircle(tft.width()/2, BOXSIZE, (OTHERBOXSIZE/1.5) + 2, RED);
-  tft.drawCircle(tft.width()/2, BOXSIZE, (OTHERBOXSIZE/1.5) + 3, RED);
+  tft.drawCircle(tft.width()/2, OTHERBOXSIZE * 2, OTHERBOXSIZE/1.5, RED);
+  tft.drawCircle(tft.width()/2, OTHERBOXSIZE * 2, (OTHERBOXSIZE/1.5) + 1, RED);
+  tft.drawCircle(tft.width()/2, OTHERBOXSIZE * 2, (OTHERBOXSIZE/1.5) + 2, RED);
+  tft.drawCircle(tft.width()/2, OTHERBOXSIZE * 2, (OTHERBOXSIZE/1.5) + 3, RED);
 }
 
 void Circle_3(){
-  tft.drawCircle((BOXSIZE*3)-(BOXSIZE/2), BOXSIZE, OTHERBOXSIZE/1.5, RED);
-  tft.drawCircle((BOXSIZE*3)-(BOXSIZE/2), BOXSIZE, (OTHERBOXSIZE/1.5) + 1, RED);
-  tft.drawCircle((BOXSIZE*3)-(BOXSIZE/2), BOXSIZE, (OTHERBOXSIZE/1.5) + 2, RED);
-  tft.drawCircle((BOXSIZE*3)-(BOXSIZE/2), BOXSIZE, (OTHERBOXSIZE/1.5) + 3, RED);
+  tft.drawCircle((BOXSIZE*3)-(BOXSIZE/2), OTHERBOXSIZE * 2, OTHERBOXSIZE/1.5, RED);
+  tft.drawCircle((BOXSIZE*3)-(BOXSIZE/2), OTHERBOXSIZE * 2, (OTHERBOXSIZE/1.5) + 1, RED);
+  tft.drawCircle((BOXSIZE*3)-(BOXSIZE/2), OTHERBOXSIZE * 2, (OTHERBOXSIZE/1.5) + 2, RED);
+  tft.drawCircle((BOXSIZE*3)-(BOXSIZE/2), OTHERBOXSIZE * 2, (OTHERBOXSIZE/1.5) + 3, RED);
 }
 
 void Circle_4(){
@@ -326,5 +429,3 @@ void Circle_9(){
 
 
 ttc TicTacToe;  
-
-

@@ -3,7 +3,7 @@ MCUFRIEND_kbv tft;
 #include <TouchScreen.h>
 #include <HardwareSerial.h>
 #include "TicTacToe.h"
-char name = "TTTCMR";  
+char *name = "TTTCMR";  
 const int XP=6,XM=A2,YP=A1,YM=7; //320x480 ID=0x9486
 const int TS_LEFT=927,TS_RT=115,TS_TOP=954,TS_BOT=114;
 
@@ -36,16 +36,16 @@ void setup(void){
     ID = tft.readID();
     tft.begin(ID);
     Serial.begin(9600);
+    Serial.print("   test");
     tft.setRotation(Orientation);
     tft.fillScreen(BLACK);
 
 
-
-    //TicTacToe.mainGameSetup();
+    //TicTacToe.mainGameSetup(tft);
 
     //tft.fillScreen(YELLOW);
 }
 
 void loop(){
-  TicTacToe.mainGameLoop();
+  TicTacToe.mainGameLoop(tft);
 }
