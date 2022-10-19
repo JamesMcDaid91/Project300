@@ -6,6 +6,7 @@
 * Created 26 Oct 2015
 * by Akshay James
 * Video at https://www.youtube.com/watch?v=LgtcUxe8fmA
+* Ian: THIS CODE WAS SOURCED FROM: https://create.arduino.cc/projecthub/blackpanda856/play-music-using-arduino-uno-and-a-speaker-b94e4a
 */
 
 #include"pitches.h"
