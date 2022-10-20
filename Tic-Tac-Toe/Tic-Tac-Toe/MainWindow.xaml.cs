@@ -1,6 +1,8 @@
 ﻿using System.Windows;
 using System;
-
+/*
+ * opposites need to be checked
+ */
 namespace Tic_Tac_Toe
 {
     /// <summary>
@@ -263,6 +265,258 @@ namespace Tic_Tac_Toe
             }
             
         }
+        private void AIAlt(int Difficulty)
+        {
+            switch (Difficulty)
+            {
+                case 1: AIGo();
+                        break;
+                case 2: AIMedium();
+                        break;
+                case 3: 
+                        break;
+                default:
+                    break;
+            }
+        }
+        private void AIMedium()
+        {
+            bool AItookItsGo = false;
+            int playerNumber = 2;
+            int postion1Column = 1;
+            int postion1Row = 1;
+            //search for winning two in a row
+            //postion [1,1]
+            //line l
+            if (AICompare(playerNumber,postion1Column, postion1Row, 0, 1) && !AItookItsGo)
+            {
+                AItookItsGo = TryPlayPostion(2, 1);
+            }
+            //line r
+            if (AICompare(playerNumber, postion1Column, postion1Row, 2, 1) && !AItookItsGo)
+            {
+                AItookItsGo = TryPlayPostion(0, 1);
+            }
+            //line t
+            if (AICompare(playerNumber, postion1Column, postion1Row, 1, 0) && !AItookItsGo)
+            {
+                AItookItsGo = TryPlayPostion(1, 2);
+            }
+            //line b
+            if (AICompare(playerNumber, postion1Column, postion1Row, 1, 2) && !AItookItsGo)
+            {
+                AItookItsGo = TryPlayPostion(1, 0);
+            }
+            //line tl
+            if (AICompare(playerNumber, postion1Column, postion1Row, 0, 0) && !AItookItsGo)
+            {
+                AItookItsGo = TryPlayPostion(2, 2);
+            }
+            //line br
+            if (AICompare(playerNumber, postion1Column, postion1Row, 2, 2) && !AItookItsGo)
+            {
+                AItookItsGo = TryPlayPostion(0, 0);
+            }
+            //line tr
+            if (AICompare(playerNumber, postion1Column, postion1Row, 2, 0) && !AItookItsGo)
+            {
+                AItookItsGo = TryPlayPostion(0, 2);
+            }
+            //line bl
+            if (AICompare(playerNumber, postion1Column, postion1Row, 0, 2) && !AItookItsGo)
+            {
+                AItookItsGo = TryPlayPostion(2, 0);
+            }
+            //postion[0,0]
+            postion1Column = 0;
+            postion1Row = 0;
+            //line v
+            if (AICompare(playerNumber, postion1Column, postion1Row, 0, 1) && !AItookItsGo)
+            {
+                AItookItsGo = TryPlayPostion(0, 2);
+            }
+            //line h
+            if (AICompare(playerNumber, postion1Column, postion1Row, 1, 0) && !AItookItsGo)
+            {
+                AItookItsGo = TryPlayPostion(2, 0);
+            }
+            //postion [2,0]
+            postion1Column = 2;
+            postion1Row = 0;
+            //line v
+            if (AICompare(playerNumber, postion1Column, postion1Row, 2, 1) && !AItookItsGo)
+            {
+                AItookItsGo = TryPlayPostion(2, 2);
+            }
+            //line h
+            if (AICompare(playerNumber, postion1Column, postion1Row, 1, 0) && !AItookItsGo)
+            {
+                AItookItsGo = TryPlayPostion(0, 0);
+            }
+            //postion [2,2]
+            postion1Column = 2;
+            postion1Row = 2;
+            //line v
+            if (AICompare(playerNumber, postion1Column, postion1Row, 2, 1) && !AItookItsGo)
+            {
+                AItookItsGo = TryPlayPostion(2, 0);
+            }
+            //line h
+            if (AICompare(playerNumber, postion1Column, postion1Row, 1, 2) && !AItookItsGo)
+            {
+                AItookItsGo = TryPlayPostion(0, 2);
+            }
+            //postion [0,2]
+            postion1Column = 0;
+            postion1Row = 2;
+            //line v
+            if (AICompare(playerNumber, postion1Column, postion1Row, 0, 1) && !AItookItsGo)
+            {
+                AItookItsGo = TryPlayPostion(0, 0);
+            }
+            //line h
+            if (AICompare(playerNumber, postion1Column, postion1Row, 1, 2) && !AItookItsGo)
+            {
+                AItookItsGo = TryPlayPostion(2, 2);
+            }
+            
+
+            //search for lossing two in a row
+            playerNumber = 1;
+            postion1Column = 1;
+            postion1Row = 1;
+            //search for winning two in a row
+            //postion [1,1]
+            //line l
+            if (AICompare(playerNumber, postion1Column, postion1Row, 0, 1) && !AItookItsGo)
+            {
+                AItookItsGo = TryPlayPostion(2, 1);
+            }
+            //line r
+            if (AICompare(playerNumber, postion1Column, postion1Row, 2, 1) && !AItookItsGo)
+            {
+                AItookItsGo = TryPlayPostion(0, 1);
+            }
+            //line t
+            if (AICompare(playerNumber, postion1Column, postion1Row, 1, 0) && !AItookItsGo)
+            {
+                AItookItsGo = TryPlayPostion(1, 2);
+            }
+            //line b
+            if (AICompare(playerNumber, postion1Column, postion1Row, 1, 2) && !AItookItsGo)
+            {
+                AItookItsGo = TryPlayPostion(1, 0);
+            }
+            //line tl
+            if (AICompare(playerNumber, postion1Column, postion1Row, 0, 0) && !AItookItsGo)
+            {
+                AItookItsGo = TryPlayPostion(2, 2);
+            }
+            //line br
+            if (AICompare(playerNumber, postion1Column, postion1Row, 2, 2) && !AItookItsGo)
+            {
+                AItookItsGo = TryPlayPostion(0, 0);
+            }
+            //line tr
+            if (AICompare(playerNumber, postion1Column, postion1Row, 2, 0) && !AItookItsGo)
+            {
+                AItookItsGo = TryPlayPostion(0, 2);
+            }
+            //line bl
+            if (AICompare(playerNumber, postion1Column, postion1Row, 0, 2) && !AItookItsGo)
+            {
+                AItookItsGo = TryPlayPostion(2, 0);
+            }
+            //postion[0,0]
+            postion1Column = 0;
+            postion1Row = 0;
+            //line v
+            if (AICompare(playerNumber, postion1Column, postion1Row, 0, 1) && !AItookItsGo)
+            {
+                AItookItsGo = TryPlayPostion(0, 2);
+            }
+            //line h
+            if (AICompare(playerNumber, postion1Column, postion1Row, 1, 0) && !AItookItsGo)
+            {
+                AItookItsGo = TryPlayPostion(2, 0);
+            }
+            //postion [2,0]
+            postion1Column = 2;
+            postion1Row = 0;
+            //line v
+            if (AICompare(playerNumber, postion1Column, postion1Row, 2, 1) && !AItookItsGo)
+            {
+                AItookItsGo = TryPlayPostion(2, 2);
+            }
+            //line h
+            if (AICompare(playerNumber, postion1Column, postion1Row, 1, 0) && !AItookItsGo)
+            {
+                AItookItsGo = TryPlayPostion(0, 0);
+            }
+            //postion [2,2]
+            postion1Column = 2;
+            postion1Row = 2;
+            //line v
+            if (AICompare(playerNumber, postion1Column, postion1Row, 2, 1) && !AItookItsGo)
+            {
+                AItookItsGo = TryPlayPostion(2, 0);
+            }
+            //line h
+            if (AICompare(playerNumber, postion1Column, postion1Row, 1, 2) && !AItookItsGo)
+            {
+                AItookItsGo = TryPlayPostion(0, 2);
+            }
+            //postion [0,2]
+            postion1Column = 0;
+            postion1Row = 2;
+            //line v
+            if (AICompare(playerNumber, postion1Column, postion1Row, 0, 1) && !AItookItsGo)
+            {
+                AItookItsGo = TryPlayPostion(0, 0);
+            }
+            //line h
+            if (AICompare(playerNumber, postion1Column, postion1Row, 1, 2) && !AItookItsGo)
+            {
+                AItookItsGo = TryPlayPostion(2, 2);
+            }
+
+            //random play
+            if (!AItookItsGo)
+            {
+                AIGo();
+            }
+        }
+        bool TryPlayPostion(int column, int row)
+        {
+            bool AIPlayed = false;
+            if (gameState[column,row] == 0)
+            {
+                gameState[column, row] = 2;
+                UpdateDisplay(column, row, 2);
+                AIPlayed = true;
+                if (CheckForWin())
+                {
+                    //AI win Screen
+                    EndScreen("Computer");
+                }
+                if (CheckDraw())
+                {
+                    EndScreen("Nobody");
+                }
+            }
+            return AIPlayed;
+        }
+        private bool AICompare(int playerNumber,int postion1Column, int postion1Row, int postion2Column, int postion2Row)
+        {
+            if (gameState[postion1Column, postion1Row] == gameState[postion2Column, postion2Row] && gameState[postion1Column,postion1Row] == playerNumber)
+            {
+                return true;
+            }
+            else return false;
+        }
+        private void AIHard()
+        { 
+        }
         //player turn
         private void PlayerTurn(int gridColumn, int gridRow)
         {
@@ -274,7 +528,7 @@ namespace Tic_Tac_Toe
                 {
                     if (!CheckDraw())
                     {
-                        AIGo();
+                        AIAlt(2);
                     }
                     else EndScreen("Nobody");
                 }
