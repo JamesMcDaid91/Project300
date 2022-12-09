@@ -3,7 +3,6 @@ MCUFRIEND_kbv tft;
 #include <TouchScreen.h>
 #include <TrueRandom.h>
 #include <HardwareSerial.h>
-#include "ttcRunningGame.h"
 #include "ttcMasterGame.h"
 #include "ttcGUI.h"
 #include "MP3_Player.h"
@@ -14,32 +13,47 @@ MCUFRIEND_kbv tft;
 
 
 
-//various states for main menu to be in. 
-State tictactoeStart(tictactoe); 
-State musicGUI(musicDashboard);
-State clockGUI(clockDashboard);
-State settingsGUI(settingsDashboard);
+//declaring various states to be in such as main menu, tic tac toe etc.
+
+//misc
 State mainMenuGUI(mainGUI);
-State clockLoop(clockVoidLoop);
 State voidState(voidMethod);
 State voidTrueState(voidMethod);
 FSM GUI = FSM(mainMenuGUI);
-FSM CLOCK = FSM(voidState);
+
+//tic tac toe
+State tictacIntroScreen(ttFrontPage); 
+State tictacGridScreen(ttGridPage);
+FSM TTC = FSM(voidState);
+
+//music
+State musicGUI(musicDashboard);
 FSM MUSIC = FSM(voidState);
-//FSM TTC = FSM(tictactoe);
+
+//clock
+State clockLoop(clockVoidLoop);
+State clockGUI(clockDashboard);
+FSM CLOCK = FSM(voidState);
+
+//settings
+State settingsGUI(settingsDashboard);
+
+
+
 
 
 char *name = "TTTCMR";  
-bool setupRun = false;
 const int XP=6,XM=A2,YP=A1,YM=7; //320x480 ID=0x9486
 const int TS_LEFT=929,TS_RT=180,TS_TOP=963,TS_BOT=186;
 int counter = 1;
+bool firstRunTicTac = false;
+bool ticTacFinished = false;
 
 TouchScreen ts = TouchScreen(XP, YP, XM, YM, 150);
 TSPoint tp;
 
 
-#define MINPRESSURE 150
+#define MINPRESSURE 200
 #define MAXPRESSURE 1000
 
 int16_t BOXSIZE;
@@ -94,6 +108,7 @@ void setup(void){
   //Serial.println("Playing Song");
 }
 
+
 void loop(){
   CLOCK.update();
   MUSIC.update();
@@ -115,7 +130,7 @@ void loop(){
   if (tp.z < MINPRESSURE || tp.z > MAXPRESSURE) return; //checks if has been pressed
   if (tp.x > 0 && tp.x > TS_LEFT/2  && tp.y > 0 && tp.y > TS_TOP/2){ //TOP RIGHT || TIC TAC TOE
     if (GUI.isInState(mainMenuGUI)){
-      GUI.transitionTo(tictactoeStart);
+      GUI.transitionTo(tictacIntroScreen);
     }
   }
 
@@ -200,7 +215,7 @@ void loop(){
   ///////////////////////////////////////////////////////////////////////////////////////////////
 
 
-  if(tp.x > 0 && tp.x < TS_LEFT && tp.y > 0 && tp.y < TS_TOP && (GUI.isInState(clockGUI) || GUI.isInState(settingsGUI))){ //SETTINGS AND CLOCK EXIT
+  if(tp.x > 0 && tp.x < TS_LEFT && tp.y > 0 && tp.y < TS_TOP && (GUI.isInState(clockGUI) || GUI.isInState(settingsGUI) || ticTacFinished)){ //SETTINGS AND CLOCK EXIT
     GUI.transitionTo(mainMenuGUI);
   }
   
@@ -210,26 +225,110 @@ void loop(){
     MUSIC.update();
   }
   
-  if (GUI.isInState(mainMenuGUI) || GUI.isInState(clockGUI) || GUI.isInState(settingsGUI) || (GUI.isInState(musicGUI) && MUSIC.isInState(voidState))){
-    Serial.print("from GUI.update()");
+  if (GUI.isInState(mainMenuGUI) || GUI.isInState(clockGUI) || GUI.isInState(settingsGUI) || (GUI.isInState(musicGUI) && MUSIC.isInState(voidState)) || ticTacFinished){
+    if (ticTacFinished) ticTacFinished = false;
+    ticTacFinished = false;
     GUI.update();   //update GUI to selected state if it gets this far.
   }
-  CLOCK.update(); //update clock to current time.
-  
-}
-  
-void tictactoe(){
+
   ///////////////////////////////////////////////////////////////////////////////////////////////
-  //                         MAIN TIC TAC TOE GAME, STILL TO BE FIXED                          //
+  //                               TIC TAC TOE MAIN RUNNING GAME                               //
+  //                       HAS TO BE IN HERE DUE TO HOW THE STATES WORK                        //
   ///////////////////////////////////////////////////////////////////////////////////////////////
 
-  if (setupRun == false){ //only runs setup once
-    ttcRunningGame.mainSetup(tft);
-    setupRun = true;
+  if (tp.x > 0 && tp.x < TS_LEFT && tp.y > 0 && tp.y < TS_TOP && (GUI.isInState(tictacIntroScreen) || GUI.isInState(tictacGridScreen))){
+    //START OF TIC TAC TOE GAME
+    if (GUI.isInState(tictacIntroScreen)){ 
+      GUI.transitionTo(tictacGridScreen);
+      TTC.transitionTo(voidTrueState);
+      TTC.update();
+      GUI.update();
+      ticTacFinished = false;
+      firstRunTicTac = true;
+    }
+
+
+    //LOOP FOR MAIN GAME
+    if (GUI.isInState(tictacGridScreen)){
+      int pos = 0;
+      if (firstRunTicTac == true){
+        pos = tictacGUI.getTouchedPosition(tft, firstRunTicTac);
+        firstRunTicTac = false;
+        return;
+      }
+      else {
+        pos = tictacGUI.getTouchedPosition(tft, firstRunTicTac);
+      }
+      
+
+      //ttcMasterGame(gridRow, gridCol);
+      int gridRow, gridCol;
+      switch(pos){
+        case 1:
+          gridRow = 0;
+          gridCol = 0;
+          break;
+        case 2:
+          gridRow = 0;
+          gridCol = 1;
+          break;
+        case 3:
+          gridRow = 0;
+          gridCol = 2;
+          break;
+        case 4:
+          gridRow = 1;
+          gridCol = 0;
+          break;
+        case 5:
+          gridRow = 1;
+          gridCol = 1;
+          break;
+        case 6:
+          gridRow = 1;
+          gridCol = 2;
+          break;
+        case 7:
+          gridRow = 2;
+          gridCol = 0;
+          break;
+        case 8:
+          gridRow = 2;
+          gridCol = 1;
+          break;
+        case 9:
+          gridRow = 2;
+          gridCol = 2;
+          break;
+      }
+
+      //return int value from player turn, have 0 = continue, 1 = ai go etc. if (end screen num) endscreen(), go back to main menu state.
+      int result = ttcMasterGame.PlayerTurn(gridRow, gridCol);
+      Serial.println("RESULT FROM GAME");
+      Serial.print(result);
+      switch(result){
+        case 0: 
+          tictacGUI.EndScreen(0); 
+          ticTacFinished = true;
+          break;
+        case 1:
+          tictacGUI.EndScreen(1);
+          ticTacFinished = true;
+          break;
+        case 2:
+          tictacGUI.EndScreen(2);
+          ticTacFinished = true;   
+          break;
+        case 3:
+          break;
+      }
+    }
+    CLOCK.update();
+    delay(500);
   }
-  else if (setupRun == true){
-    ttcRunningGame.testLoop(tft);
-  }
+
+  CLOCK.update(); //update clock to current time.
+  
 }
 
 void mainGUI(){
@@ -377,6 +476,14 @@ void musicClearTextArea(){
   tft.setTextSize(4);
 }
 
+void tictacEndScreen(int winner){
+  tictacGUI.EndScreen(winner); //display end screen
+}
+
 void clockVoidLoop(){bClock.bClockLoop();} //CLOCK VOID LOOP, STATES DIDN'T LIKE IT BEING A METHOD FROM A HEADER
 
 void voidMethod(){} //VOID METHOD FOR ANY TIME STATES NEED TO BE STAGNANT
+
+void ttFrontPage(){tictacGUI.drawFrontPage(tft);} //FRONT PAGE FOR STATE
+
+void ttGridPage(){tictacGUI.drawGrid(tft);} //GRID PAGE FOR STATE
