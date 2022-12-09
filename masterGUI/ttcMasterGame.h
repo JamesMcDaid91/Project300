@@ -3,7 +3,7 @@
 #include <stdio.h>
 /*############################################################################################
 * 
-* ck:  find and replace EndScreen(int) with the name of the function that produces the pop-up   0 = draw, 1 = player, 2 = ai/player2 etc
+*   EndScreen() 0 = draw, 1 = player, 2 = ai/player2 etc, 3 = continue
 *   UpdateDisplay() function needs the end call for circles and crosses. the number indicates 
       the grid postion. The circle of cross means O or X.
 
@@ -20,18 +20,21 @@ class Game
 
         //game set up
         int gameState[3][3];
-        void test(){
-            for (int i = 0; i < 3; i++)
-              {
-                for (int j = 0; j < 3; j++)
-                {
-                  gameState[i][j] = 0;
-                }
-              }
+
+        void resetState(){
+          for (int i = 0; i < 3; i++)
+          {
+            for (int j = 0; j < 3; j++)
+            {
+              Serial.println("reset ");
+              Serial.print(gameState[i][j]);
+              gameState[i][j] = 0;
+            }
+          }
         }
 
         //player's turn
-        void PlayerTurn(int gridColumn, int gridRow)
+        int PlayerTurn(int gridColumn, int gridRow)
         {
           if (gameState[gridColumn][gridRow] == 0)// can only take a go if the position is empty
           {
@@ -41,26 +44,27 @@ class Game
             {
               if (!CheckDraw())
               {
-                AIGo();
+                return AIGo();
+                
               }
 
               else {
-                tictacGUI.EndScreen(0);
-                test();
+                resetState();
+                return 0;
               }
             }
             else
             {
-              tictacGUI.EndScreen(1);
-              test();
+              resetState();
+              return 1;
             }
+            return 3;
             //else player win screen
           }
         }
         //AI's turn
-        void AIGo()
+        int AIGo()
         {
-          
           bool AITookItsGo = false;
           while (!AITookItsGo)
           {
@@ -77,15 +81,15 @@ class Game
           if (CheckForWin())
           {
             //AI win Screen
-            tictacGUI.EndScreen(2);
-            test();
+            resetState();
+            return 2;
           }
           if (CheckDraw())
           {
-            tictacGUI.EndScreen(0);
-            test();
+            resetState();
+            return 0;
           }
-
+          return 3;
         }
 
         //display update

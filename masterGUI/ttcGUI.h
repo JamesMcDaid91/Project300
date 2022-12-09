@@ -1,6 +1,8 @@
 #include <MCUFRIEND_kbv.h>
 #include <TrueRandom.h>
-#include <TouchScreen.h>  
+#include <TouchScreen.h>
+#include "FiniteStateMachine.h"
+#include <stdio.h>
 
 
 // PLAYER 1 = X
@@ -22,12 +24,12 @@ class ttcGUI{
 
     //MCUFRIEND_kbv tft;    
 
-    #define MINPRESSURE 300
+    #define MINPRESSURE 200
     #define MAXPRESSURE 1000
 
     int16_t BOXSIZE;
     int16_t OTHERBOXSIZE;
-    uint16_t ID, oldPOS, currentPOS;
+    
     uint8_t Orientation = 0;    //PORTRAIT
 
     #define BLACK   0x0000
@@ -41,6 +43,7 @@ class ttcGUI{
 
 
   public:
+    uint16_t ID, currentPOS;
 
     void allPosReset(){
       pos1 = false, pos2 = false, pos3 = false, pos4 = false, pos5 = false, pos6 = false, pos7 = false, pos8 = false, pos9 = false;
@@ -49,8 +52,10 @@ class ttcGUI{
     void EndScreen(int winner){
       allPosReset();
       tft.fillScreen(GREEN);
-      tft.setTextColor(RED);
+      tft.setRotation(3);
+      tft.setTextColor(BLACK);
       tft.setTextSize(4);
+      tft.setCursor(0, OTHERBOXSIZE);
       switch(winner){
         case 0:
           tft.print("Draw!");
@@ -65,120 +70,111 @@ class ttcGUI{
           tft.print("Error in calculating winner");      
           break;
       }
+
+      tft.println("press anywhere to return to main menu");
+      tft.setRotation(0);
     }
       
-    bool mainGameSetup(MCUFRIEND_kbv tft){
-      tft.fillScreen(BLACK);
-      tft.setTextColor(RED);
-      tft.setTextSize(4);
-      tft.print("WELCOME TO   TIC.TAC.TOE");
-      tft.setCursor(0, 120);   
-      tft.print("PRESS ANYWHERE TO CONTINUE");
-      while (1) {
-          tp = ts.getPoint();
-          pinMode(XM, OUTPUT);
-          pinMode(YP, OUTPUT);
-          if (tp.z < MINPRESSURE || tp.z > MAXPRESSURE) continue;
-          if (tp.x > 0 && tp.x < TS_LEFT  && tp.y > 0 && tp.y < TS_TOP) break; // GOES INTO LOOP
-      }
+    void drawFrontPage(MCUFRIEND_kbv tft){
+      // tft.fillScreen(BLACK);
+      // tft.setTextColor(WHITE);
+      // tft.setTextSize(4);
+      // tft.print("WELCOME TO   TIC.TAC.TOE");
+      // tft.setCursor(0, 120);   
+      // tft.print("PRESS ANYWHERE TO CONTINUE");
+    }
+
+    void drawGrid(MCUFRIEND_kbv tft){
       BOXSIZE = (tft.width()+1)/ 3;
       OTHERBOXSIZE = tft.width() / 5.33;
       tft.fillScreen(BLACK);
-      tft.fillScreen(WHITE);
 
-      tft.fillRect(0, (OTHERBOXSIZE * 3)-3, tft.height(), 5, BLACK); //left line
-      tft.fillRect(0, (OTHERBOXSIZE * 5)-3, tft.height(), 5, BLACK); //right line
-      tft.fillRect(BOXSIZE-2, OTHERBOXSIZE, 5, OTHERBOXSIZE*6, BLACK); //middle top  
-      tft.fillRect((BOXSIZE * 2)-2, OTHERBOXSIZE, 5, OTHERBOXSIZE*6, BLACK); //middle bottom
-      //tft.fillRect(0,0,tft.width(),OTHERBOXSIZE,GREEN);
-      delay(1000);
-      return true;
+      tft.fillRect(0, (OTHERBOXSIZE * 3)-3, tft.height(), 5, WHITE); //left line
+      tft.fillRect(0, (OTHERBOXSIZE * 5)-3, tft.height(), 5, WHITE); //right line
+      tft.fillRect(BOXSIZE-2, OTHERBOXSIZE, 5, OTHERBOXSIZE*6, WHITE); //middle top  
+      tft.fillRect((BOXSIZE * 2)-2, OTHERBOXSIZE, 5, OTHERBOXSIZE*6, WHITE); //middle bottom
+      delay(250);
     }
 
-    int mainGameLoop(MCUFRIEND_kbv tft){
-      uint16_t xpos, ypos;  //screen coordinates
-        tp = ts.getPoint();   //tp.x, tp.y are ADC values
+    int getTouchedPosition(MCUFRIEND_kbv tft, bool firstRun){
+      
+      uint16_t xpos = 0, ypos = 0;  //screen coordinates
+      tp = ts.getPoint();   //tp.x, tp.y are ADC values
 
-        pinMode(XM, OUTPUT);
-        pinMode(YP, OUTPUT);
+      pinMode(XM, OUTPUT);
+      pinMode(YP, OUTPUT);
 
-        if (tp.z > MINPRESSURE && tp.z < MAXPRESSURE) {
-            switch (Orientation) {
-                case 0:
-                    xpos = map(tp.x, TS_LEFT, TS_RT, 0, tft.width());
-                    ypos = map(tp.y, TS_TOP, TS_BOT, 0, tft.height());
-                    break;
-                case 1:
-                    xpos = map(tp.y, TS_TOP, TS_BOT, 0, tft.width());
-                    ypos = map(tp.x, TS_RT, TS_LEFT, 0, tft.height());
-                    break;
-                case 2:
-                    xpos = map(tp.x, TS_RT, TS_LEFT, 0, tft.width());
-                    ypos = map(tp.y, TS_BOT, TS_TOP, 0, tft.height());
-                    break;
-                case 3:
-                    xpos = map(tp.y, TS_BOT, TS_TOP, 0, tft.width());
-                    ypos = map(tp.x, TS_LEFT, TS_RT, 0, tft.height());
-                    break;
-            }
-            ////////////////////////////////////////////////////////////////////////
-            
-            // BREAKOUT CODE, STILL IN TESTING 
-            if (ypos < OTHERBOXSIZE || ypos > (OTHERBOXSIZE * 5 + BOXSIZE)){
-              tft.fillScreen(BLACK);
-              mainGameLoop(tft);
-            }
-            ////////////////////////////////////////////////////////////////////////
+      if (firstRun == true) return 0;
+      
 
-            //split into 3 ypos, top, middle and bottom. if you are within the boxsize height portion of each designated one. 
-            //first 3 positions, if you are within the boxsize height portion of the top 3 boxes.
+      switch (Orientation) {
+        case 0:
+            xpos = map(tp.x, TS_LEFT, TS_RT, 0, tft.width());
+            ypos = map(tp.y, TS_TOP, TS_BOT, 0, tft.height());
+            break;
+        case 1:
+            xpos = map(tp.y, TS_TOP, TS_BOT, 0, tft.width());
+            ypos = map(tp.x, TS_RT, TS_LEFT, 0, tft.height());
+            break;
+        case 2:
+            xpos = map(tp.x, TS_RT, TS_LEFT, 0, tft.width());
+            ypos = map(tp.y, TS_BOT, TS_TOP, 0, tft.height());
+            break;
+        case 3:
+            xpos = map(tp.y, TS_BOT, TS_TOP, 0, tft.width());
+            ypos = map(tp.x, TS_LEFT, TS_RT, 0, tft.height());
+            break;
+      }
 
-            //tft.fillRect(BOXSIZE, OTHERBOXSIZE*3, BOXSIZE, BOXSIZE, YELLOW);
-            
-            if (ypos > OTHERBOXSIZE && ypos < (OTHERBOXSIZE + BOXSIZE)) {               
-                //oldPOS = currentPOS;
-                //width of all boxes are BOXSIZE, this finds out which based on the xpos
-                if (xpos < BOXSIZE && pos1 == false) { 
-                    currentPOS = 1;
-                    pos1 = true;                            
-                } else if (xpos < BOXSIZE * 2 && pos2 == false) { 
-                    currentPOS = 2;
-                    pos2 = true;
-                } else if (xpos < BOXSIZE * 3 && pos3 == false) {
-                    currentPOS = 3;
-                    pos3 = true;
-                }
-              }
+      ///////////////////////////////////////////////////////////////////////////////////////////////
+      //                       split into 3 ypos, top, middle and bottom.                          //
+      //                                                                                           //
+      //       if you are within the boxsize height portion of each designated one.                //
+      //                                                                                           //
+      //       first 3 positions, if you are within the boxsize height portion of the top 3 boxes. //                                                                                         //
+      //                                                                                           //
+      //        width of all boxes are BOXSIZE, this finds out which based on the xpos             //
+      ///////////////////////////////////////////////////////////////////////////////////////////////
+      
+      
+      if (ypos > OTHERBOXSIZE && ypos < (OTHERBOXSIZE + BOXSIZE)) {             
+        if (xpos < BOXSIZE && pos1 == false) { 
+            currentPOS = 1;
+            pos1 = true;                            
+        } else if (xpos < BOXSIZE * 2 && pos2 == false) { 
+            currentPOS = 2;
+            pos2 = true;
+        } else if (xpos < BOXSIZE * 3 && pos3 == false) {
+            currentPOS = 3;
+            pos3 = true;
+        }
+      }
 
-            if (ypos > OTHERBOXSIZE * 3 && ypos < (OTHERBOXSIZE * 3 + BOXSIZE)){
-              //oldPOS = currentPOS;
+      if (ypos > OTHERBOXSIZE * 3 && ypos < (OTHERBOXSIZE * 3 + BOXSIZE)){
+        if (xpos < BOXSIZE && pos4 == false) {
+            currentPOS = 4;
+            pos4 = true;          
+        } else if (xpos < BOXSIZE * 2 && pos5 == false) {
+            currentPOS = 5;
+            pos5 = true;              
+        } else if (xpos < BOXSIZE * 3 && pos6 == false) {
+            currentPOS = 6;
+            pos6 = true;                 
+        }
+      }
 
-                  if (xpos < BOXSIZE && pos4 == false) {
-                      currentPOS = 4;
-                      pos4 = true;          
-                  } else if (xpos < BOXSIZE * 2 && pos5 == false) {
-                      currentPOS = 5;
-                      pos5 = true;              
-                  } else if (xpos < BOXSIZE * 3 && pos6 == false) {
-                      currentPOS = 6;
-                      pos6 = true;                 
-                  }
-            }
-
-            if (ypos > OTHERBOXSIZE * 5 && ypos < (OTHERBOXSIZE * 5 + BOXSIZE)){
-                //oldPOS = currentPOS;
-                  if (xpos < BOXSIZE && pos7 == false) {
-                      currentPOS = 7;
-                      pos7 = true;           
-                  } else if (xpos < BOXSIZE * 2 && pos8 == false) {
-                      currentPOS = 8;
-                      pos8 = true;
-                  } else if (xpos < BOXSIZE * 3 && pos9 == false) {
-                      currentPOS = 9;
-                      pos9 = true;
-                  }
-            }
-        }    
+      if (ypos > OTHERBOXSIZE * 5 && ypos < (OTHERBOXSIZE * 5 + BOXSIZE)){
+        if (xpos < BOXSIZE && pos7 == false) {
+            currentPOS = 7;
+            pos7 = true;           
+        } else if (xpos < BOXSIZE * 2 && pos8 == false) {
+            currentPOS = 8;
+            pos8 = true;
+        } else if (xpos < BOXSIZE * 3 && pos9 == false) {
+            currentPOS = 9;
+            pos9 = true;
+        }
+      }
       return currentPOS;
     }
 

@@ -57,7 +57,7 @@ class MP3Player{
       }
       Serial.println(F("DFPlayer Mini online."));
       
-      myDFPlayer.volume(15);  //Set volume value. From 0 to 30. Default is 15
+      myDFPlayer.volume(23);  //Set volume value. From 0 to 30. Default is 23
       //myDFPlayer.play(1);
     }
 
